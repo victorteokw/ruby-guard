@@ -17,15 +17,9 @@
 
 (defun ruby-guard-root (&optional last-directory)
   "Return the directory name where guard file is located."
-  (ignore-errors
-    (let ((current-directory
-           (or last-directory (file-truename default-directory))))
-      (if (string-equal "/" current-directory)
-          nil
-        (if (file-exists-p (expand-file-name "Guardfile" current-directory))
-            current-directory
-          (setq current-directory (expand-file-name ".." current-directory))
-          (ruby-guard-root current-directory))))))
+  (locate-dominating-file (or last-directory
+                              (file-truename default-directory))
+                          "Guardfile"))
 
 (defun ruby-guard-spring-p ()
   (file-exists-p (file-truename
@@ -64,4 +58,9 @@
              (async-shell-command
               (ruby-guard-command-name)
               (get-buffer-create ruby-guard-buffer-name)))))
-      (message "Cannot find Guardfile."))))
+      (error "Cannot find Guardfile."))))
+
+
+(provide 'ruby-guard)
+
+;;; ruby-guard.el ends here
