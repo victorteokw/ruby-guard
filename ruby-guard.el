@@ -1,3 +1,18 @@
+;;; ruby-guard.el --- Launching guard directly inside emacs.
+
+;; Copyright (C) 2014 Zhang Kai Yu
+
+;; Author: Zhang Kai Yu <yeannylam@gmail.com>
+;; Version: 0.1.0
+;; Keywords: ruby, guard, rails
+;; URL: https://github.com/cheunghy/ruby-guard
+
+;;; Commentary:
+
+;; M-x ruby-guard to launch.
+
+;;; Code:
+
 (defvar ruby-guard-buffer-name "*guard*")
 
 (defun ruby-guard-root (&optional last-directory)
