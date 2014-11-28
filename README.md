@@ -1,6 +1,6 @@
 ruby-guard
 ==========
 
-**under development.** 
+``M-x ruby-guard``
 
 An emacs package for running guard directly inside emacs.
