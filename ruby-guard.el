@@ -51,6 +51,7 @@
   `(let ((default-directory (ruby-guard-root)))
      ,body-form))
 
+;;;###autoload
 (defun ruby-guard ()
   (interactive)
   (let ((default-directory (ruby-guard-root)))
