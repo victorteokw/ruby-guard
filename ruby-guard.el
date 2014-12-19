@@ -60,7 +60,6 @@
               (get-buffer-create ruby-guard-buffer-name)))))
       (error "Cannot find Guardfile."))))
 
-
 (provide 'ruby-guard)
 
 ;;; ruby-guard.el ends here
