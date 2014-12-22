@@ -36,10 +36,10 @@
 
 (defun ruby-guard-command-name ()
   (cond ((ruby-guard-spring-p)
-         "spring guard")
+         "spring guard | cat")
         ((ruby-guard-bundle-p)
-         "bundle exec guard")
-        (t "guard")))
+         "bundle exec guard | cat")
+        (t "guard | cat")))
 
 (defmacro ruby-guard-with-root (body-form)
   `(let ((default-directory (ruby-guard-root)))
