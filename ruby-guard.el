@@ -33,6 +33,14 @@
   "Return non-nil if `.zeus.sock' found in `ruby-guard-root'."
   (file-exists-p (expand-file-name ".zeus.sock" (ruby-guard-root))))
 
+(defun ruby-guard-chef-cookbook-p ()
+  "Return non-nil if `ruby-guard-root' is in Chef cookbook."
+  (file-exists-p (expand-file-name "recipes" (ruby-guard-root))))
+
+(defun ruby-guard-chefdk-installed-p ()
+  "Return non-nil if Chef development kit directory is present."
+  (file-exists-p "/opt/chefdk"))
+
 (defun ruby-guard-bundle-p ()
   "Return non-nil if `Gemfile' found in `ruby-guard-root'."
   (file-exists-p (expand-file-name "Gemfile" (ruby-guard-root))))
@@ -43,6 +51,9 @@
          "spring guard")
         ((ruby-guard-bundle-p)
          "bundle exec guard")
+        ((and (ruby-guard-chef-cookbook-p)
+              (ruby-guard-chefdk-installed-p))
+         "chef exec guard")
         (t "guard")))
 
 (defmacro ruby-guard-with-root (body-form)
