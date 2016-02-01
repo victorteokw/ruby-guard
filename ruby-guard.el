@@ -22,6 +22,7 @@
                           "Guardfile"))
 
 (defun ruby-guard-spring-p ()
+  "Return non-nil if spring tmpdir found for `ruby-guard-root'."
   (file-exists-p (file-truename
                   (concat temporary-file-directory
                           "spring/"
@@ -29,12 +30,15 @@
                           ".pid"))))
 
 (defun ruby-guard-zeus-p ()
+  "Return non-nil if `.zeus.sock' found in `ruby-guard-root'."
   (file-exists-p (expand-file-name ".zeus.sock" (ruby-guard-root))))
 
 (defun ruby-guard-bundle-p ()
+  "Return non-nil if `Gemfile' found in `ruby-guard-root'."
   (file-exists-p (expand-file-name "Gemfile" (ruby-guard-root))))
 
 (defun ruby-guard-command-name ()
+  "Return ruby-guard-command."
   (cond ((ruby-guard-spring-p)
          "spring guard")
         ((ruby-guard-bundle-p)
@@ -42,11 +46,13 @@
         (t "guard")))
 
 (defmacro ruby-guard-with-root (body-form)
+  "Run (BODY-FORM) with `ruby-guard-root' as `default-directory'."
   `(let ((default-directory (ruby-guard-root)))
      ,body-form))
 
 ;;;###autoload
 (defun ruby-guard ()
+  "Run Guard in separate buffer."
   (interactive)
   (let ((default-directory (ruby-guard-root)))
     (if default-directory
