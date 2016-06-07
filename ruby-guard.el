@@ -14,6 +14,38 @@
 ;;; Code:
 
 (defvar ruby-guard-buffer-name "*guard*")
+(defvar ruby-guard-buffer nil)
+(defvar ruby-guard-dedicated-window nil
+  "Show ruby guard in a dedicated horizontal window")
+
+(defun ruby-guard-split-window-below (new-win-size)
+  "Split the window, return the new window below. We need this
+function because emacs 23 does not support the negative size
+argument to split-window."
+  (split-window
+   (frame-root-window)
+   (- (window-height (frame-root-window)) new-win-size)))
+
+(defun ruby-guard-show ()
+  "Show the guard buffer embedded in the current frame."
+  (setq ruby-guard-buffer (get-buffer-create ruby-guard-buffer-name))
+  (if ruby-guard-dedicated-window
+      (let* ((win (or (get-buffer-window ruby-guard-buffer)
+                      (ruby-guard-split-window-below 8))))
+        (with-selected-window win
+          (switch-to-buffer ruby-guard-buffer)
+          (set-window-dedicated-p (selected-window) t)))
+    (switch-to-buffer ruby-guard-buffer))
+  ruby-guard-buffer)
+
+(defun ruby-guard-hide ()
+  "Hide guard window."
+  (interactive)
+  (unless (buffer-live-p ruby-guard-buffer)
+    (error "No guard buffer found"))
+  (let ((win (get-buffer-window ruby-guard-buffer t)))
+    (if win
+        (delete-window win))))
 
 (defun ruby-guard-root (&optional last-directory)
   "Return the directory name where guard file is located."
@@ -67,16 +99,16 @@
   (interactive)
   (let ((default-directory (ruby-guard-root)))
     (if default-directory
-        (progn
-          (if (member ruby-guard-buffer-name
-                      (mapcar 'buffer-name (buffer-list)))
-              (switch-to-buffer ruby-guard-buffer-name)
-            (ruby-guard-with-root
-             (async-shell-command
-              (ruby-guard-command-name)
-              (get-buffer-create ruby-guard-buffer-name)))))
+        (if (member ruby-guard-buffer-name
+                    (mapcar 'buffer-name (buffer-list)))
+            (ruby-guard-show)
+          (ruby-guard-with-root
+           (async-shell-command
+            (ruby-guard-command-name)
+            (get-buffer-create (ruby-guard-show)))))
       (error "Cannot find Guardfile."))))
 
 (provide 'ruby-guard)
+
 
 ;;; ruby-guard.el ends here
