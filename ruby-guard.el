@@ -15,6 +15,11 @@
 
 (defvar ruby-guard-buffer-name "*guard*")
 
+(defcustom ruby-guard-custom-command ""
+  "When defined, use this command instead of detecting what should be used"
+  :type 'string
+  :group 'ruby-guard)
+
 (defun ruby-guard-root (&optional last-directory)
   "Return the directory name where guard file is located."
   (locate-dominating-file (or last-directory
@@ -47,7 +52,9 @@
 
 (defun ruby-guard-command-name ()
   "Return ruby-guard-command."
-  (cond ((ruby-guard-spring-p)
+  (cond ((not (string= ruby-guard-custom-command ""))
+	 ruby-guard-custom-command)
+	((ruby-guard-spring-p)
          "spring guard")
         ((ruby-guard-bundle-p)
          "bundle exec guard")
